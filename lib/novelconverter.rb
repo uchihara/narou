@@ -301,8 +301,12 @@ class NovelConverter
 
     clean_up_file_list << epub_path
     # mobi
-    status = NovelConverter.epub_to_mobi(epub_path, options[:verbose])
-    return nil if status != :success
+    loop {
+      status = NovelConverter.epub_to_mobi(epub_path, options[:verbose])
+      next if status == :error
+      return nil if status != :success
+      break
+    }
     mobi_path = epub_path.sub(/\.epub$/, device.ebook_file_ext)
 
     # strip
